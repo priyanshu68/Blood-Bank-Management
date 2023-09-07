@@ -119,23 +119,7 @@ public class BloodBankApp {
             System.err.println("Sign-up error: " + e.getMessage());
         }
             
-            
-            
-            
-            
-            
-            
-             
-
-            
-
-            // Insert user information into the Users table
-           
-            
-        
-		
-		
-		
+      
 		
 	}
 	public static boolean checkUser(Connection connection ,String username)
@@ -155,7 +139,103 @@ public class BloodBankApp {
 	}
 	public static void logIn(Connection connection)
 	{
-		System.out.println("Logged In");
+		System.out.println("Log In");
+		
+		
+		Scanner sc = new Scanner(System.in);
+		
+		
+		System.out.println("Username: ");
+		
+		String username = sc.nextLine();
+		
+		System.out.println("Password");
+		
+		String password = sc.nextLine();
+		
+		
+		String query = "SELECT * FROM users WHERE username =?";
+		
+		try(PreparedStatement preparedStatement = connection.prepareStatement(query))
+		{
+			preparedStatement.setString(1,username);
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next())
+			{
+				String passDb=resultSet.getString("password");
+				if (password.equals(passDb)) {
+                    System.out.println("Logged In Successfully");
+                    displayUserMenu(connection);
+                    //  allow access to the system
+                    
+                    System.out.println("Want to be a donor or blood in need?");
+                } else {
+                    System.out.println("Authentication failed.");
+                }
+			}
+			else
+			{
+				System.out.println("User not found");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.err.println("Login-in error: " + e.getMessage());
+		}
 	}
 
+
+public static void displayUserMenu(Connection connection) {
+    Scanner sc = new Scanner(System.in);
+
+    while (true) {
+        System.out.println("User Menu:");
+        System.out.println("1. View Donor Information");
+        System.out.println("2. View Recipient Information");
+        System.out.println("3. Schedule Blood Donation");
+        System.out.println("4. Search for Donors");
+        System.out.println("5. Logout");
+        System.out.print("Please select an option: ");
+
+        int choice = sc.nextInt();
+        sc.nextLine(); // Consume the newline character
+
+        switch (choice) {
+            case 1:
+                viewDonorInformation(connection);
+                break;
+            case 2:
+                viewRecipientInformation(connection);
+                break;
+            case 3:
+                scheduleBloodDonation(connection);
+                break;
+            case 4:
+                searchForDonors(connection);
+                break;
+            case 5:
+                System.out.println("Logging out...");
+                return; // Exit the user menu and return to the main menu
+            default:
+                System.out.println("Invalid choice. Please select a valid option.");
+        }
+    }
+}
+
+public static void viewDonorInformation(Connection connection) {
+    // Implement the logic to view donor information here
+}
+
+public static void viewRecipientInformation(Connection connection) {
+    // Implement the logic to view recipient information here
+}
+
+public static void scheduleBloodDonation(Connection connection) {
+    // Implement the logic to schedule blood donation here
+}
+
+public static void searchForDonors(Connection connection) {
+    // Implement the logic to search for donors here
+}
 }
